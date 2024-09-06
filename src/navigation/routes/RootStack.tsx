@@ -14,6 +14,8 @@ const configs = {
     headerShown: true,
 }
 
+//Before creating the form and inform the due context please read this: https://levelup.gitconnected.com/react-native-next-level-form-handling-25847b05191e
+
 export const RootStack = () => (
     <AppStack.Navigator screenOptions={configs} initialRouteName="Homepage">
         <AppStack.Screen name="Homepage" component={Homepage}/>
