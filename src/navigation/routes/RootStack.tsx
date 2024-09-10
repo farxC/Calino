@@ -29,7 +29,7 @@ type AppStackParamList = {
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 const configs = {
-    headerShown: true,
+    headerShown: false,
 }
 
 //Before creating the form and inform the due context please read this: https://levelup.gitconnected.com/react-native-next-level-form-handling-25847b05191e

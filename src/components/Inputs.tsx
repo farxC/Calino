@@ -5,16 +5,16 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 interface CustomInputProps extends TextInputProps{
     icon?: string;
-    stylesContainer?: StyleProp<ViewStyle>
+    componentContainer?: StyleProp<ViewStyle>
 }
 
-export const Input = ({placeholder, onChangeText, value, icon, onBlur, stylesContainer}: CustomInputProps) => {
+export const Input = ({placeholder, onChangeText, value, icon,maxLength, onBlur, componentContainer}: CustomInputProps) => {
     
    
     return(
-        <TouchableOpacity style={stylesContainer? stylesContainer : inputStyles.container}>
-             { icon && <Icon color={"#ad7402"} name={icon} size={30} style={{alignSelf:"center", paddingVertical: "1%"}}></Icon>}
-            <TextInput style={inputStyles.input} onBlur={onBlur} onChangeText={onChangeText} value={value} placeholder={placeholder}></TextInput>
+        <TouchableOpacity style={componentContainer? componentContainer : inputStyles.container}>
+             { icon && <Icon color={"#fff"} name={icon} size={30} style={{alignSelf:"center", paddingVertical: "1%"}}></Icon>}
+            <TextInput multiline={false} maxLength={maxLength} placeholderTextColor={'white'} style={inputStyles.input} onBlur={onBlur} onChangeText={onChangeText} value={value} placeholder={placeholder}></TextInput>
         </TouchableOpacity>
     )
 }
@@ -48,7 +48,7 @@ const inputStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 8,
         margin: "1.4%",
-        borderColor: "#964b00",
+        borderColor: "#fff",
         alignSelf: 'center',
         justifyContent: 'center',
         flexDirection: "row",
@@ -56,8 +56,10 @@ const inputStyles = StyleSheet.create({
     },
     input:{
         fontSize: 16,
-        fontWeight: "800",
-        textAlign: "center",
-        width: "80%",
+        fontFamily: 'BebasNeue-Regular',
+        width: '85%',
+        color: '#fff',
+        flexGrow: 1
+        
     }
 })
