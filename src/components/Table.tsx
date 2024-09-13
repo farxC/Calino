@@ -38,14 +38,17 @@ export const AnimalTable: React.FC<Props> = () => {
        }
     )
     const countPets = (key: string) =>{
-        setCount(count + 1)
+        setTableData((prevState) => ({
+            ...prevState,
+
+        }))
        
     }
    
     const selectElement =  (key: string) => (
         
         <TouchableOpacity style={{justifyContent: 'center', alignSelf: 'center', backgroundColor: "black", padding:10, borderRadius: 10}} onPress={() => countPets(key)}>
-            <Text>{count}</Text>
+            <Text>{tableData["CANINO (CACHORRO)"]["CASTRADO"]}</Text>
         </TouchableOpacity>
     )
 
