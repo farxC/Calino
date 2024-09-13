@@ -1683,6 +1683,15 @@
 "@types/prop-types@*":
   version "15.7.12"
 
+"@types/react-native-table-component@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.npmjs.org/@types/react-native-table-component/-/react-native-table-component-1.2.8.tgz"
+  integrity sha512-ZhWnoW3LpzXx+fCyosNBVasVCuaWNCMDMcP0mO9FSSK8eRE4ihLTqKiit6zjpph9ot4LQ/mD8hmbhV0YpRLvOQ==
+  dependencies:
+    "@types/react" "*"
+    csstype "^3.0.3"
+    react-native "*"
+
 "@types/react-native-vector-icons@^6.4.18":
   version "6.4.18"
   resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz"
@@ -2628,7 +2637,7 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-csstype@^3.0.2:
+csstype@^3.0.2, csstype@^3.0.3:
   version "3.1.3"
 
 data-view-buffer@^1.0.1:
@@ -5517,6 +5526,11 @@ react-native-dropdown-picker@^5.4.6:
   resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
   integrity sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA==
 
+react-native-reanimated-table@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/react-native-reanimated-table/-/react-native-reanimated-table-0.0.2.tgz"
+  integrity sha512-OeuqfU1AFEmHNTJlEOLWrV78JgAXnM0/ZrCm0Ab+9e5nwYJ+xab/UFXkNKz3Gyf08ZfLSNzwMQRjt3eZWPWoGA==
+
 react-native-safe-area-context@^4.10.9, "react-native-safe-area-context@>= 3.0.0":
   version "4.10.9"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-4.10.9.tgz"
@@ -5530,6 +5544,11 @@ react-native-screens@^3.34.0, "react-native-screens@>= 3.0.0":
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-table-component@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/react-native-table-component/-/react-native-table-component-1.2.2.tgz"
+  integrity sha512-7bbsi5431iWcjj3toASh8lFHGi6AG/+MTd4M7GuksXKxx/CFs/Qwv1Ys7D2wgyuYKe3hxWNfSVrteFj0tOYXYw==
+
 react-native-vector-icons@^10.1.0:
   version "10.1.0"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz"
@@ -5538,7 +5557,7 @@ react-native-vector-icons@^10.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, react-native@>=0.46, react-native@0.75.2:
+react-native@*, react-native@>=0.46, react-native@>=0.6.0, react-native@0.75.2:
   version "0.75.2"
   dependencies:
     "@jest/create-cache-key-function" "^29.6.3"
@@ -5598,7 +5617,7 @@ react-test-renderer@18.3.1:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.2"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18 || ^19", react@^18.2.0, react@^18.3.1, react@>=16.8, react@>=17.0.0, react@18.3.1:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18 || ^19", react@^18.2.0, react@^18.3.1, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@18.3.1:
   version "18.3.1"
   dependencies:
     loose-envify "^1.1.0"

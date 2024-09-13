@@ -16,7 +16,7 @@ export const Button = ({title, iconName,iconColor, containerStyle}: CustomButton
         <TouchableOpacity style={btnStl.container}>
            <Icon color={iconColor} size={28} name={iconName}/>
            {title && (
-                <Text style={{fontSize: 15, color: '#000', fontWeight: '500'}}>{title}</Text>
+                <Text style={{fontSize: 15, color: '#000', fontWeight: 'bold'}}>{title}</Text>
            )}
         </TouchableOpacity>
     )
@@ -26,15 +26,16 @@ export const Button = ({title, iconName,iconColor, containerStyle}: CustomButton
 const btnStl = StyleSheet.create({
     container:{
         borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height ),
-        width: Dimensions.get('window').width * 0.18,
-        height: Dimensions.get('window').width * 0.18,
+        width: Dimensions.get('window').width * 0.33,
+        height: Dimensions.get('window').width * 0.13,
         backgroundColor: '#fff7f7',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth:2,
         borderColor:'#c4c4c4',
         alignSelf: 'center',
-        position: 'relative',
+        elevation: 10
+        
         
     }
 })

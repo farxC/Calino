@@ -5,17 +5,21 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 interface CustomInputProps extends TextInputProps{
     icon?: string;
-    componentContainer?: StyleProp<ViewStyle>
+    componentContainer?: StyleProp<ViewStyle>;
+    fieldName: string;
 }
 
-export const Input = ({placeholder, onChangeText, value, icon,maxLength, onBlur, componentContainer}: CustomInputProps) => {
+export const Input = ({placeholder, fieldName, onChangeText, value, icon,maxLength, onBlur, componentContainer}: CustomInputProps) => {
     
    
     return(
-        <TouchableOpacity style={componentContainer? componentContainer : inputStyles.container}>
-             { icon && <Icon color={"#fff"} name={icon} size={30} style={{alignSelf:"center", paddingVertical: "1%"}}></Icon>}
-            <TextInput multiline={false} maxLength={maxLength} placeholderTextColor={'white'} style={inputStyles.input} onBlur={onBlur} onChangeText={onChangeText} value={value} placeholder={placeholder}></TextInput>
-        </TouchableOpacity>
+        <View >
+            <Text style={inputStyles.field}>{fieldName}</Text>
+            <TouchableOpacity style={componentContainer? componentContainer : inputStyles.container}>
+                { icon && <Icon color={"#fff"} name={icon} size={30} style={{alignSelf:"center", paddingVertical: "1%", margin: 10}}></Icon>}
+                <TextInput multiline={false} maxLength={maxLength} placeholderTextColor={'white'} style={inputStyles.input} onBlur={onBlur} onChangeText={onChangeText} value={value} placeholder={placeholder}></TextInput>
+            </TouchableOpacity>
+        </View>
     )
 }
 
@@ -42,7 +46,7 @@ export const ControlledInput = <Formtype extends FieldValues>({
 }
 
 
-const inputStyles = StyleSheet.create({
+export const inputStyles = StyleSheet.create({
     
     container:{
         borderWidth: 2,
@@ -55,11 +59,18 @@ const inputStyles = StyleSheet.create({
         width: '85%',
     },
     input:{
-        fontSize: 16,
+        fontSize: 13,
         fontFamily: 'BebasNeue-Regular',
         width: '85%',
         color: '#fff',
-        flexGrow: 1
-        
-    }
+        flexGrow: 1,
+        opacity: 2   
+    },
+
+    field:{
+        fontSize: 16,
+        color: '#fff',
+        marginLeft: '9%',
+        fontWeight: 'bold'
+    }   
 })
