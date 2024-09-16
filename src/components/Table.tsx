@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 interface Props {}
 
 type CastratedChoices = {
-    "CASTRADO" : number;
-    "NÃO CASTRADO": number;
+    "CASTRADO"?: number;
+    "NÃO CASTRADO"?: number;
 }
 
 type Animals = {
- "CANINO (CACHORRO)": CastratedChoices;
-  "FELINO (GATO)": CastratedChoices;
+ "CANINO (CACHORRO)"?: CastratedChoices;
+  "FELINO (GATO)"?: CastratedChoices;
 }
     
 export const AnimalTable: React.FC<Props> = () => {
@@ -27,11 +27,6 @@ export const AnimalTable: React.FC<Props> = () => {
         "NÃO CASTRADO",
     ]
 
-    useEffect(() =>
-
-            console.log(Object.entries(tableData).map((key, value) => 'CHAVE:'+ key + value))
-        
-    )
 
     const [tableData,setTableData] = useState<Animals>(
        {
@@ -42,7 +37,8 @@ export const AnimalTable: React.FC<Props> = () => {
 
 
 
-    const countPets = (key: string, value: CastratedChoices) =>{
+    const countPets = (key: Animals, value: CastratedChoices) =>{
+        console.log(key)
         setTableData((prevState) => ({
             ...prevState,
             
@@ -50,18 +46,16 @@ export const AnimalTable: React.FC<Props> = () => {
         
     }
    
-    const selectElement =  (key: string, value: CastratedChoices) => {
+    const selectElement =  (key: Animals, value: CastratedChoices) => (
         
        
-
-        return(
             <TouchableOpacity style={{justifyContent: 'center', alignSelf: 'center', backgroundColor: "black", padding:10, borderRadius: 10}} onPress={() => countPets(key, value)}>
                  <Text>oi</Text>
             </TouchableOpacity>
-        )
-        
-    }
+    )
 
+
+    const tableObject: [keyof Animals, CastratedChoices][]= Object.entries(tableData) as [keyof Animals, CastratedChoices][]
     
     
     return (
@@ -76,7 +70,7 @@ export const AnimalTable: React.FC<Props> = () => {
                 
                 
                 
-                {Object.entries(tableData).map(([key, value]) =>(
+                {tableObject.map(([key, value]) =>(
                     <TableWrapper key={key} style={[tableStyles.textData, tableStyles.row]}>
                         <Cell data={key} textStyle={tableStyles.textData}/>
                         <Cell data={selectElement(key,value)} textStyle={tableStyles.textData} />
