@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import LottieView from "lottie-react-native"
 import { paws_animation } from "../components/style/constants"
 import { ControlledInput, Input, inputStyles } from "../components/Inputs"
-import { useFormContext } from "react-hook-form"
+import { Controller, FieldErrors, FieldValues, SubmitErrorHandler, SubmitHandler, UseControllerProps, useFormContext } from "react-hook-form"
 import { Data } from "../navigation/routes/RootStack"
 import axios, { Axios } from "axios"
 import DropDownPicker from "react-native-dropdown-picker"
@@ -12,10 +12,50 @@ import { Button } from "../components/Button"
 import { Header } from "../components/Header"
 import { AnimalTable } from "../components/Table"
 
+const ControlledDropdown = <FormType extends FieldValues>({
+    control,
+    name,
+    rules,
+    }: UseControllerProps<FormType>) => {
+        const [open, setOpen] = useState(false);
+        const [value, setValue] = useState(null);
+        const [items, setItems] = useState([
+            { label: 'Bela Vista', value: 'Bela Vista' }
+        ]);
+        return(
+            <Controller
+             control={control}
+             name={name}
+             rules={rules}
+             render={({field, fieldState: {error}}) => (
+                <View style={{marginBottom: '1.5%'}}>
+                    <DropDownPicker 
+                    listMode="SCROLLVIEW" 
+                    theme="DARK" 
+                    textStyle={{ fontSize: 16,color:"#fff", fontWeight: 500, textAlign: "center", width: "80%", }}
+                    containerStyle={style.dropdownContainerStl}
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                    searchable={true}
+    
+                    placeholder="Escolha um Bairro"/>
+                     {error &&(
+                    <Text style={{ color: 'red',fontWeight: "bold", marginRight: '5%', margin:"-1.5%", left: '9%' }}>{error.message}</Text>
+                      )}
+                </View>
+             )}
+            />
+        )
+    }
+
 
 export const Homepage = () => {
 
-    const { control, handleSubmit, getValues } = useFormContext<Data>();
+    const { control, handleSubmit, getValues, formState:{errors} } = useFormContext<Data>();
     const logo = require('../components/style/cutlogo_1.png')
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -44,6 +84,15 @@ export const Homepage = () => {
 
     }
 
+    const onValidForm: SubmitHandler<Data>= (data) => {
+        console.log(data)
+    }
+    const onInvalid: SubmitErrorHandler<Data> = (errors: FieldErrors<Data>) => {
+        console.log(errors.dog)
+        return (
+            Alert.alert(`Inválido \n ${errors}`)
+        )
+    }
 
 
     const pawsAnimationRef = useRef<LottieView>(null)
@@ -60,20 +109,20 @@ export const Homepage = () => {
             <View style={style.horizontalLine}></View>
             <ScrollView style={{ flex: 9, backgroundColor: '#003777', borderBottomEndRadius: 20, borderBottomLeftRadius: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingTop: 15, marginHorizontal: '4%' }}>
 
-                <ControlledInput fieldName="Tutor" name="name" maxLength={45} icon={"face-man-profile"} placeholder="Digite o nome completo do tutor" control={control} />
+                <ControlledInput rules={{required: '* Insira o nome do tutor'}} fieldName="Tutor" name="name" maxLength={45} icon={"face-man-profile"} placeholder="Digite o nome completo do tutor" control={control} />
                 <ControlledInput icon="map-outline" fieldName="CEP" maxLength={9} onBlur={() => getCep(getValues('CEP'))} name="CEP" placeholder="Digite aqui o CEP (opcional)" control={control} />
                 
                 <Text style={inputStyles.field}>Bairro</Text>
                 <DropDownPicker listMode="SCROLLVIEW" theme="DARK" textStyle={{ fontSize: 16,color:"#fff", fontWeight: 500, textAlign: "center", width: "80%", }} containerStyle={style.dropdownContainerStl} open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems} searchable={true} placeholder="Escolha um Bairro"></DropDownPicker>
-
+                <ControlledDropdown control={control} name="district"/>
                 <View style={style.row}>
-                    <ControlledInput maxLength={5} fieldName="Número" componentContainer={style.addrContainer} control={control} name="number" placeholder="Nº do Endereço"></ControlledInput>
-                    <ControlledInput fieldName="Complemento" maxLength={15} componentContainer={style.addrContainer} control={control} name="complement" placeholder="Casa, Apartamento"></ControlledInput>
+                    <ControlledInput rules={{required: '* Insira o número'}} maxLength={5} fieldName="Número" componentContainer={style.addrContainer} control={control} name="number" placeholder="Nº do Endereço"></ControlledInput>
+                    <ControlledInput rules={{required: '*Insira o complemento'}} fieldName="Complemento" maxLength={15} componentContainer={style.addrContainer} control={control} name="complement" placeholder="Casa, Apartamento"></ControlledInput>
                 </View>
                 <AnimalTable />
 
-                <View style={{ flex: 1, justifyContent: 'center', paddingTop: '3%', bottom: '2.5%'}}>
-                    <Button iconColor={'#008000'} title="Enviar" iconName="checkcircle" />
+                <View style={{ flex: 2, justifyContent: 'center', paddingTop: '3%', bottom: '2.5%'}}>
+                    <Button iconColor={'#008000'} title="Enviar" iconName="checkcircle" onPress={handleSubmit(onValidForm,onInvalid)} />
                 </View>
 
             </ScrollView>

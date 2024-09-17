@@ -1,24 +1,37 @@
 import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Text } from "react-native";
 import {Table, Row, Rows, TableWrapper, Cell} from "react-native-reanimated-table";
 import { useEffect, useState } from "react";
+import RNPickerSelect, { Item } from 'react-native-picker-select'
 
 interface Props {}
 
-type CastratedChoices = {
+type castrationStatus = {
     "CASTRADO"?: number;
     "NÃO CASTRADO"?: number;
 }
 
 type Animals = {
- "CANINO (CACHORRO)"?: CastratedChoices;
-  "FELINO (GATO)"?: CastratedChoices;
+ "CANINO (CACHORRO)"?: castrationStatus;
+  "FELINO (GATO)"?: castrationStatus;
+}
+
+const listValues = (int: number) =>{
+    let valuesArr = []
+    for(let i = 0; i <= int; i++){
+        valuesArr.push(
+            {label: i.toString(), value: i.toString()}
+        )
+    }
+    return valuesArr
 }
     
 export const AnimalTable: React.FC<Props> = () => {
 
-    const [count, setCount] = useState(0)
 
-
+    const items = listValues(25)
+    useEffect(() =>{
+       console.log(tableData)
+    })
 
     // Header items for the table;
     const head =[
@@ -30,33 +43,40 @@ export const AnimalTable: React.FC<Props> = () => {
 
     const [tableData,setTableData] = useState<Animals>(
        {
-        "CANINO (CACHORRO)": {"CASTRADO": 0, "NÃO CASTRADO":1 },
-        "FELINO (GATO)": {"CASTRADO":2, "NÃO CASTRADO": 3}
+        "CANINO (CACHORRO)": {"CASTRADO": 0, "NÃO CASTRADO":0 },
+        "FELINO (GATO)": {"CASTRADO":0, "NÃO CASTRADO": 0}
        }
     )
 
 
+    const updateCounterPets = (animalType: keyof Animals, castrationStatus: keyof castrationStatus, value: string) => {
 
-    const countPets = (key: Animals, value: CastratedChoices) =>{
-        console.log(key)
-        setTableData((prevState) => ({
-            ...prevState,
-            
+        setTableData(prevData => ({
+            ...prevData,
+            [animalType]:{
+                ...prevData[animalType],
+                [castrationStatus]: Number(value)
+            }
         }))
-        
     }
-   
-    const selectElement =  (key: Animals, value: CastratedChoices) => (
-        
-       
-            <TouchableOpacity style={{justifyContent: 'center', alignSelf: 'center', backgroundColor: "black", padding:10, borderRadius: 10}} onPress={() => countPets(key, value)}>
-                 <Text>oi</Text>
-            </TouchableOpacity>
-    )
 
 
-    const tableObject: [keyof Animals, CastratedChoices][]= Object.entries(tableData) as [keyof Animals, CastratedChoices][]
     
+
+
+    const DropdownValues =  (animalType: keyof Animals, castrationStatus: keyof castrationStatus) => {
+           
+            return(
+                <RNPickerSelect
+                    onValueChange={(value) => updateCounterPets(animalType, castrationStatus, value)}
+                    items={items}
+                />
+            )
+           
+    }
+
+
+   let globalIndex = 0
     
     return (
         <View style={tableStyles.container}>
@@ -69,15 +89,24 @@ export const AnimalTable: React.FC<Props> = () => {
                 />
                 
                 
-                
-                {tableObject.map(([key, value]) =>(
-                    <TableWrapper key={key} style={[tableStyles.textData, tableStyles.row]}>
-                        <Cell data={key} textStyle={tableStyles.textData}/>
-                        <Cell data={selectElement(key,value)} textStyle={tableStyles.textData} />
-                        <Cell data={selectElement(key,value)} textStyle={tableStyles.textData} />  
+                {Object.entries(tableData).map(([key, value]) =>{
+                    return(
+                        <TableWrapper key={key} style={[tableStyles.textData, tableStyles.row]}>
+                            <Cell data={key} textStyle={tableStyles.textData}/>
+                           
+                            {/* CASTRADO */}
+                            <Cell data={DropdownValues(key as keyof Animals, "CASTRADO")} textStyle={tableStyles.textData} />
+                            
+                            {/* NÃO CASTRADO */}
+                            <Cell data={DropdownValues(key as keyof Animals, "NÃO CASTRADO")} textStyle={tableStyles.textData} />  
                     
-                    </TableWrapper>
-                ))}
+                        </TableWrapper>
+                    )
+                   
+                })}
+
+
+
 
               
             

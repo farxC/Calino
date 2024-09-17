@@ -34,11 +34,12 @@ export const ControlledInput = <Formtype extends FieldValues>({
         name={name}
         rules={rules}
         render={({field, fieldState:{error}}) =>(
-            <View>
-                {error &&(
-                    <Text style={{ color: 'red', marginLeft: '8%', margin:"-1.5%" }}>{error.message}</Text>
-                )}
+            <View style={{marginBottom:'1.5%'}}>
+              
                 <Input onChangeText={field.onChange} value={field.value} {...textInputProps}/>
+                {error &&(
+                    <Text style={{ color: 'red',fontWeight: "bold", marginRight: '5%', margin:"-1.5%", left: '9%' }}>{error.message}</Text>
+                )}
             </View>
          )}
         />

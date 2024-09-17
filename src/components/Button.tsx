@@ -10,10 +10,10 @@ interface CustomButtonProps extends ButtonProps{
     containerStyle?: StyleProp<ViewStyle>;
 }
 
-export const Button = ({title, iconName,iconColor, containerStyle}: CustomButtonProps) => {
+export const Button = ({title, iconName,iconColor, onPress, containerStyle}: CustomButtonProps) => {
 
     return (
-        <TouchableOpacity style={btnStl.container}>
+        <TouchableOpacity style={btnStl.container} onPress={onPress}>
            <Icon color={iconColor} size={28} name={iconName}/>
            {title && (
                 <Text style={{fontSize: 15, color: '#000', fontWeight: 'bold'}}>{title}</Text>
