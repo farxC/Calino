@@ -1,79 +1,44 @@
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native"
 import { useEffect, useRef, useState } from "react"
-import LottieView from "lottie-react-native"
-import { paws_animation } from "../components/style/constants"
 import { ControlledInput, Input, inputStyles } from "../components/Inputs"
 import { Controller, FieldErrors, FieldValues, SubmitErrorHandler, SubmitHandler, UseControllerProps, useFormContext } from "react-hook-form"
 import { Data } from "../navigation/routes/RootStack"
 import axios, { Axios } from "axios"
-import DropDownPicker from "react-native-dropdown-picker"
 import { Button } from "../components/Button"
 import { Header } from "../components/Header"
 import { AnimalTable } from "../components/Table"
+import { ControlledDropdown } from "../components/Dropdown"
+import { cepMask } from "../components/utils/cepMask"
 
-const ControlledDropdown = <FormType extends FieldValues>({
-    control,
-    name,
-    rules,
-    }: UseControllerProps<FormType>) => {
-        const [open, setOpen] = useState(false);
-        const [value, setValue] = useState(null);
-        const [items, setItems] = useState([
-            { label: 'Bela Vista', value: 'Bela Vista' }
-        ]);
-        return(
-            <Controller
-             control={control}
-             name={name}
-             rules={rules}
-             render={({field, fieldState: {error}}) => (
-                <View style={{marginBottom: '1.5%'}}>
-                    <DropDownPicker 
-                    listMode="SCROLLVIEW" 
-                    theme="DARK" 
-                    textStyle={{ fontSize: 16,color:"#fff", fontWeight: 500, textAlign: "center", width: "80%", }}
-                    containerStyle={style.dropdownContainerStl}
-                    open={open}
-                    value={value}
-                    items={items}
-                    setOpen={setOpen}
-                    setValue={setValue}
-                    setItems={setItems}
-                    searchable={true}
-    
-                    placeholder="Escolha um Bairro"/>
-                     {error &&(
-                    <Text style={{ color: 'red',fontWeight: "bold", marginRight: '5%', margin:"-1.5%", left: '9%' }}>{error.message}</Text>
-                      )}
-                </View>
-             )}
-            />
-        )
-    }
 
 
 export const Homepage = () => {
 
-    const { control, handleSubmit, getValues, formState:{errors} } = useFormContext<Data>();
+    const { control, handleSubmit, getValues,watch,setValue, formState:{errors} } = useFormContext<Data>();
     const logo = require('../components/style/cutlogo_1.png')
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: 'Bela Vista', value: 'Bela Vista' }
-    ]);
+
+    //In future this future 'll be removed..
+    //It's a quick fix to CEP mask issue
+    const cepValue = watch("CEP")
+    
+    useEffect(() => {
+        setValue("CEP",cepMask(cepValue))
+    }, [cepValue])
 
     const getCep = async (cep: string) => {
+        
         const cepDigits = cep.replace(/\D/g, '');
+        
 
         if (cepDigits) {
             const regValidCep = /^[0-9]{8}$/
             if (regValidCep.test(cepDigits)) {
-
+                console.log('True')
                 axios.get(`https://viacep.com.br/ws/${cepDigits}/json/`)
                     .then(response => {
-                        console.log(response.data)
-
+                        setValue("street", response.data["logradouro"])
+                        setValue("district",response.data["bairro"])
                     })
                     .catch(error => {
                         return console.log(error)
@@ -84,23 +49,21 @@ export const Homepage = () => {
 
     }
 
+    
+
     const onValidForm: SubmitHandler<Data>= (data) => {
-        console.log(data)
+       
+        
     }
     const onInvalid: SubmitErrorHandler<Data> = (errors: FieldErrors<Data>) => {
-        console.log(errors.dog)
-        return (
-            Alert.alert(`Inválido \n ${errors}`)
-        )
+        console.log(errors)
+        if(errors.dog && errors.cat){
+          return Alert.alert("Nenhum animal contabilizado")
+        }
     }
 
 
-    const pawsAnimationRef = useRef<LottieView>(null)
-    useEffect(() => {
-        pawsAnimationRef.current?.play();
-        console.log(pawsAnimationRef)
-    }, []);
-
+   
     return (
 
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={style.container}>
@@ -111,14 +74,15 @@ export const Homepage = () => {
 
                 <ControlledInput rules={{required: '* Insira o nome do tutor'}} fieldName="Tutor" name="name" maxLength={45} icon={"face-man-profile"} placeholder="Digite o nome completo do tutor" control={control} />
                 <ControlledInput icon="map-outline" fieldName="CEP" maxLength={9} onBlur={() => getCep(getValues('CEP'))} name="CEP" placeholder="Digite aqui o CEP (opcional)" control={control} />
-                
                 <Text style={inputStyles.field}>Bairro</Text>
-                <DropDownPicker listMode="SCROLLVIEW" theme="DARK" textStyle={{ fontSize: 16,color:"#fff", fontWeight: 500, textAlign: "center", width: "80%", }} containerStyle={style.dropdownContainerStl} open={open} value={value} items={items} setOpen={setOpen} setValue={setValue} setItems={setItems} searchable={true} placeholder="Escolha um Bairro"></DropDownPicker>
-                <ControlledDropdown control={control} name="district"/>
+              
+                <ControlledDropdown rules={{required: "*Insira um bairro"}} control={control} name="district"/>
+                <ControlledInput rules={{required: "*Insira uma rua"}} icon="garage-variant" name="street" control={control} fieldName="Rua" placeholder="Nome da Rua" maxLength={60}/>
                 <View style={style.row}>
                     <ControlledInput rules={{required: '* Insira o número'}} maxLength={5} fieldName="Número" componentContainer={style.addrContainer} control={control} name="number" placeholder="Nº do Endereço"></ControlledInput>
                     <ControlledInput rules={{required: '*Insira o complemento'}} fieldName="Complemento" maxLength={15} componentContainer={style.addrContainer} control={control} name="complement" placeholder="Casa, Apartamento"></ControlledInput>
                 </View>
+                {/* TO DO: Insert animal table in form */}
                 <AnimalTable />
 
                 <View style={{ flex: 2, justifyContent: 'center', paddingTop: '3%', bottom: '2.5%'}}>
@@ -158,14 +122,7 @@ const style = StyleSheet.create({
     },
 
 
-    dropdownContainerStl: {
-        margin: "1.4%",
-        marginLeft: '7%',
-        justifyContent: 'center',
-        flexDirection: "row",
-        width: '85%'
-    },
-
+   
     addrContainer: {
         borderWidth: 2,
         borderColor: "#fff",

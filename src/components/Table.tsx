@@ -29,10 +29,6 @@ export const AnimalTable: React.FC<Props> = () => {
 
 
     const items = listValues(25)
-    useEffect(() =>{
-       console.log(tableData)
-    })
-
     // Header items for the table;
     const head =[
         "ANIMAL",
@@ -60,7 +56,6 @@ export const AnimalTable: React.FC<Props> = () => {
         }))
     }
 
-
     
 
 
@@ -75,8 +70,6 @@ export const AnimalTable: React.FC<Props> = () => {
            
     }
 
-
-   let globalIndex = 0
     
     return (
         <View style={tableStyles.container}>

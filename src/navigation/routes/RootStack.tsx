@@ -10,7 +10,7 @@ export interface Data {
     number: string;
     CEP: string;
     complement: string;
-
+    street: string;
     cat?: {
         castrated?: number,
         nonCastrated?: number

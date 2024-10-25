@@ -34,9 +34,9 @@ const headerStyle = StyleSheet.create({
     },
     logo: {
         resizeMode: "contain",
-        width: 100,
-        height: 100,
+        width: 90,
+        height: 90,
         position: 'absolute',
-        top: '34%',
+        top: '38%',
     },
 })
