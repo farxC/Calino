@@ -4,6 +4,13 @@ import { Data } from "../../screens/Data";
 import { ScreenProps } from "react-native-screens";
 import { FormProvider, useForm } from "react-hook-form";
 
+type DataAnimalStatus = {
+    castrated?: number;
+    nonCastrated?: number;
+}
+
+export type DataAnimals = {cat: DataAnimalStatus} | {dog: DataAnimalStatus};
+
 export interface Data {
     name: string;
     district: string;
@@ -11,14 +18,7 @@ export interface Data {
     CEP: string;
     complement: string;
     street: string;
-    cat?: {
-        castrated?: number,
-        nonCastrated?: number
-    };
-   dog?:{
-        castrated?: number,
-        nonCastrated?: number
-   }
+    DataAnimals: DataAnimals
 }
 
 type AppStackParamList = {
@@ -44,13 +44,15 @@ export const RootStack = () => {
             name: '',
             number: '',
             CEP: '',
-            cat:{
-                castrated: 0,
-                nonCastrated: 0,
-            },
-            dog:{
-                castrated: 0,
-                nonCastrated: 0,
+            DataAnimals:{
+                cat:{
+                    castrated: undefined,
+                    nonCastrated: undefined,
+                },
+                dog:{
+                    castrated: undefined,
+                    nonCastrated: undefined,
+                },
             },
             district: ''
 

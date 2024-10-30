@@ -27,10 +27,7 @@ export const Homepage = () => {
     }, [cepValue])
 
     const getCep = async (cep: string) => {
-        
         const cepDigits = cep.replace(/\D/g, '');
-        
-
         if (cepDigits) {
             const regValidCep = /^[0-9]{8}$/
             if (regValidCep.test(cepDigits)) {
@@ -46,18 +43,22 @@ export const Homepage = () => {
 
             }
         }
-
     }
+
 
     
 
     const onValidForm: SubmitHandler<Data>= (data) => {
-       
+       console.log("Valid")
+       if("cat" in data.DataAnimals && "dog" in data.DataAnimals){
+            console.log(data.DataAnimals.cat, data.DataAnimals.dog)
+       }
+
         
     }
     const onInvalid: SubmitErrorHandler<Data> = (errors: FieldErrors<Data>) => {
         console.log(errors)
-        if(errors.dog && errors.cat){
+        if(errors.DataAnimals){
           return Alert.alert("Nenhum animal contabilizado")
         }
     }
@@ -83,7 +84,7 @@ export const Homepage = () => {
                     <ControlledInput rules={{required: '*Insira o complemento'}} fieldName="Complemento" maxLength={15} componentContainer={style.addrContainer} control={control} name="complement" placeholder="Casa, Apartamento"></ControlledInput>
                 </View>
                 {/* TO DO: Insert animal table in form */}
-                <AnimalTable />
+                <AnimalTable rules={{required: "Nenhum animal foi selecionado"}} control={control} name={"DataAnimals"} />
 
                 <View style={{ flex: 2, justifyContent: 'center', paddingTop: '3%', bottom: '2.5%'}}>
                     <Button iconColor={'#008000'} title="Enviar" iconName="checkcircle" onPress={handleSubmit(onValidForm,onInvalid)} />

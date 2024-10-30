@@ -36,7 +36,7 @@ export const ControlledDropdown = <FormType extends FieldValues>({
                     value={value || field.value}
                     items={items}
                     setOpen={setOpen}
-                    setValue={setValue || field.onChange}
+                    setValue={field.onChange}
                     setItems={setItems}
                     searchable={true}
     
