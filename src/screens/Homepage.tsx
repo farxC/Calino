@@ -3,28 +3,30 @@ import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, T
 import { useEffect, useRef, useState } from "react"
 import { ControlledInput, Input, inputStyles } from "../components/Inputs"
 import { Controller, FieldErrors, FieldValues, SubmitErrorHandler, SubmitHandler, UseControllerProps, useFormContext } from "react-hook-form"
-import { Data } from "../navigation/routes/RootStack"
+import { Data, DataAnimals } from "../navigation/routes/RootStack"
 import axios, { Axios } from "axios"
 import { Button } from "../components/Button"
 import { Header } from "../components/Header"
 import { AnimalTable } from "../components/Table"
 import { ControlledDropdown } from "../components/Dropdown"
 import { cepMask } from "../components/utils/cepMask"
+import { boolean } from "zod"
 
 
 
 export const Homepage = () => {
 
-    const { control, handleSubmit, getValues,watch,setValue, formState:{errors} } = useFormContext<Data>();
-    const logo = require('../components/style/cutlogo_1.png')
+    const { control, handleSubmit, getValues,clearErrors, setError, watch, setValue, formState:{errors} } = useFormContext<Data>();
+
 
     //In future this future 'll be removed..
     //It's a quick fix to CEP mask issue
     const cepValue = watch("CEP")
-    
+   
     useEffect(() => {
         setValue("CEP",cepMask(cepValue))
     }, [cepValue])
+    
 
     const getCep = async (cep: string) => {
         const cepDigits = cep.replace(/\D/g, '');
@@ -46,20 +48,32 @@ export const Homepage = () => {
     }
 
 
+    const noneFilled =(animals: DataAnimals) => {
+        if("cat" in animals && "dog" in animals){
+            if(animals.cat.castrated || animals.cat.nonCastrated || animals.dog.castrated || animals.dog.nonCastrated !== undefined){
+               return false
+            }
+        }
+        return true
+    } 
+
     
 
     const onValidForm: SubmitHandler<Data>= (data) => {
-       console.log("Valid")
-       if("cat" in data.DataAnimals && "dog" in data.DataAnimals){
-            console.log(data.DataAnimals.cat, data.DataAnimals.dog)
-       }
-
+      if (noneFilled(data.DataAnimals)){
+        setError("DataAnimals", {message: "Nenhum animal foi inserido."})
+        return
+      } 
+      console.log("Formulário válido")
+     
         
     }
-    const onInvalid: SubmitErrorHandler<Data> = (errors: FieldErrors<Data>) => {
-        console.log(errors)
-        if(errors.DataAnimals){
-          return Alert.alert("Nenhum animal contabilizado")
+    const onInvalid: SubmitErrorHandler<Data> = (invalidData) => {
+        let isFilled = !noneFilled(watch("DataAnimals"))
+        if(isFilled){
+            clearErrors("DataAnimals")
+        } else if(errors.DataAnimals){
+            return Alert.alert("Dados", "Nenhum animal contabilizado")
         }
     }
 

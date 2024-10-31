@@ -1,13 +1,9 @@
-import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Text } from "react-native";
+import { StyleSheet, View, ScrollView, TouchableOpacity, Alert, Text, Keyboard } from "react-native";
 import {Table, Row, Rows, TableWrapper, Cell} from "react-native-reanimated-table";
 import { useEffect, useState } from "react";
 import RNPickerSelect, { Item } from 'react-native-picker-select'
 import { Controller, FieldValues, Path, UseControllerProps } from "react-hook-form";
 
-interface dropdownAnimalsProps {
-    status: keyof castrationStatus,
-    animals: keyof Animals
-}
 
 type castrationStatus = {
     "CASTRADO"?: number;
@@ -28,7 +24,7 @@ export const AnimalTable =<FormType extends FieldValues> ({
     
     const listValues = (int: number) =>{
         let valuesArr = []
-        for(let i = 0; i <= int; i++){
+        for(let i = 1; i <= int; i++){
             valuesArr.push(
                 {label: i.toString(), value: i.toString()}
             )
@@ -43,25 +39,12 @@ export const AnimalTable =<FormType extends FieldValues> ({
         "NÃO CASTRADO",
     ]
 
-   
-    const [tableData,setTableData] = useState<Animals>(
-       {
-        "CANINO (CACHORRO)": {"CASTRADO": 0, "NÃO CASTRADO":0 },
-        "FELINO (GATO)": {"CASTRADO":0, "NÃO CASTRADO": 0}
-       }
-    )
+
+    const tableData = {
+        "CANINHO (CACHORRO)": '.dog',
+        "FELINO (GATO)": '.cat'
+    }
  
-
-    // const updateCounterPets = (animalType: keyof Animals, castrationStatus: keyof castrationStatus, value: string) => {
-
-    //     setTableData(prevData => ({
-    //         ...prevData,
-    //         [animalType]:{
-    //             ...prevData[animalType],
-    //             [castrationStatus]: Number(value)
-    //         }
-    //     }))
-    // }
 
 
     const DropdownValues =<FormType extends FieldValues>({
@@ -78,7 +61,8 @@ export const AnimalTable =<FormType extends FieldValues> ({
                     rules={rules}
                     render={({field, fieldState:{error}}) => (
                         <RNPickerSelect
-                        onValueChange={(value) => field.value}
+                        value={field.value}
+                        onValueChange={field.onChange}
                         items={items}
                         />
                     )}
@@ -98,12 +82,20 @@ export const AnimalTable =<FormType extends FieldValues> ({
                 textStyle={tableStyles.textHead}
                  data={head}
                 />
-                {/* TO DO.. NÃO ESTÁ FUNCIONANDO. */}
-                <TableWrapper style={[tableStyles.textData, tableStyles.row]}>
-                    <Cell data={"CANINO (CACHORRO)"} textStyle={tableStyles.textData}/>
-                    <Cell data={DropdownValues({control, name: `${name}.castrated` as Path<FormType>, rules})}/>
-                    <Cell data={DropdownValues({control,  name: `${name}.nonCastrated` as Path<FormType> , rules})}/>
-                </TableWrapper>
+                
+                {Object.entries(tableData).map(([key, value]) => {
+                    return(
+                        <TableWrapper key={key} style={[tableStyles.textData, tableStyles.row]} >
+                            <Cell data={key} textStyle={tableStyles.textData}/>
+
+                            {/* Castrado */}
+                            <Cell data={DropdownValues({control, name:`${name+value}.castrated` as Path<FormType>})} textStyle={tableStyles.textData}/>
+                            
+                            {/* Não Castrado */}
+                            <Cell data={DropdownValues({control, name: `${name+value}.nonCastrated` as Path<FormType>})} textStyle={tableStyles.textData}/>
+                        </TableWrapper>
+                    )
+                })}
                 
                
 
